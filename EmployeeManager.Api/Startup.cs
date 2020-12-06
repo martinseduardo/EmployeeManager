@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using EmployeeManager.Api.Models;
+using EmployeeManager.Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace EmployeeManager.Api
 {
@@ -26,6 +22,10 @@ namespace EmployeeManager.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.Configure<DbSettings>(Configuration.GetSection(nameof(DbSettings)));
+            services.AddSingleton<IDbSettings>(
+                x => x.GetRequiredService<IOptions<DbSettings>>().Value);
+            services.AddSingleton<IEmployeeService, EmployeeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
