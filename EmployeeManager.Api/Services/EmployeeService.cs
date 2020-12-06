@@ -8,8 +8,14 @@ namespace EmployeeManager.Api.Services
 {
     public class EmployeeService : IEmployeeService
     {
-        public EmployeeService(IDbSettings dbSettings)
+        private readonly IMongoCollection<Employee> _employees;
+        
+        public EmployeeService(IDbSettings dbSettings, MongoClient mongoClient)
         {
+            _mongoClient = mongoClient;
+            var dataBase= _mongoClient.GetDatabase(dbSettings.ConnectionString);
+            _employees = dataBase.GetCollection<Employee>("Employees");
+
         }
         public Employee Create(Employee employee)
         {

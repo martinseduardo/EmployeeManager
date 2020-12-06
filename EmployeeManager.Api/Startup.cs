@@ -23,8 +23,7 @@ namespace EmployeeManager.Api
         {
             services.AddControllers();
             services.Configure<DbSettings>(Configuration.GetSection(nameof(DbSettings)));
-            services.AddSingleton<IDbSettings>(
-                x => x.GetRequiredService<IOptions<DbSettings>>().Value);
+            services.AddSingleton<IDbSettings>(x => x.GetRequiredService<IOptions<DbSettings>>().Value);
             services.AddSingleton<IEmployeeService, EmployeeService>();
         }
 
