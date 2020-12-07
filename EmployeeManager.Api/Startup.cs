@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace EmployeeManager.Api
@@ -25,6 +26,7 @@ namespace EmployeeManager.Api
             services.Configure<DbSettings>(Configuration.GetSection(nameof(DbSettings)));
             services.AddSingleton<IDbSettings>(x => x.GetRequiredService<IOptions<DbSettings>>().Value);
             services.AddSingleton<IEmployeeService, EmployeeService>();
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,6 +36,14 @@ namespace EmployeeManager.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "EmployeeManager");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseHttpsRedirection();
 
